@@ -17,8 +17,37 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+
+        print("ViewController view viewDidLoad")
+
+
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("ViewController view will appear")
+
+        let defaults = UserDefaults.standard
+        let defualtTipPercentageIndex = defaults.integer(forKey: "defaultTipPercentageIndex")
+        tipPercent.selectedSegmentIndex = defualtTipPercentageIndex
+
+        calculateTip(Any.self)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("ViewController view did appear")
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("ViewController view will disappear")
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print(" ViewControllerview did disappear")
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
