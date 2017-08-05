@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var billField: UITextField!
     @IBOutlet weak var tipPercent: UISegmentedControl!
+    @IBOutlet weak var totalViewContainer: UIView!
+    @IBOutlet var mainViewContainer: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +63,20 @@ class ViewController: UIViewController {
 
     @IBAction func changeTip(_ sender: Any) {
         print("changed tip amount")
-        calculateTip(Any.self)
+
+        // Highlight new total
+        if (totalLabel.text != "$0.00"){
+            UIView.animate(withDuration: 0.6, animations: {
+                self.totalViewContainer.backgroundColor = UIColor(red:0.28, green:0.57, blue:0.97, alpha:1.0)
+
+            })
+            UIView.animate(withDuration: 0.6, animations: {
+                self.totalViewContainer.backgroundColor = UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.0)
+                
+            })
+
+            calculateTip(Any.self)
+        }
     }
 
     @IBAction func calculateTip(_ sender: Any) {
@@ -73,8 +88,6 @@ class ViewController: UIViewController {
 
         tipLabel.text = String(format: "$%.2f", tip)
         totalLabel.text = String(format: "$%.2f", total)
-
-
 
     }
 }
