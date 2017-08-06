@@ -51,6 +51,7 @@
                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                 <connections>
                                     <action selector="calculateTip:" destination="BYZ-38-t0r" eventType="editingChanged" id="Knm-WY-6tz"/>
+                                    <action selector="finishEditingBillField:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="PYg-7J-n8S"/>
                                 </connections>
                             </textField>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="4In-Da-G2c">
