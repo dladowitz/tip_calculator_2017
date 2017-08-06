@@ -23,6 +23,8 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
 
         print("ViewController view viewDidLoad")
+
+        billField.becomeFirstResponder()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -66,12 +68,6 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
-    @IBAction func onTap(_ sender: Any) {
-        view.endEditing(true)
-    }
-
 
     @IBAction func changeTip(_ sender: Any) {
         print("changed tip amount")
