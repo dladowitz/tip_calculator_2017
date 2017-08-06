@@ -15,13 +15,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var tipPercent: UISegmentedControl!
     @IBOutlet weak var totalViewContainer: UIView!
     @IBOutlet var mainViewContainer: UIView!
+
     var tipAmounts:Array<Double> = [0.18, 0.20, 0.25]
+    var currencies:Array<String> = ["en_US", "en_GB", "es_ES", "ja_JP"]
+
+    var currency = ""
+
+    let defaults = UserDefaults.standard
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-
         print("ViewController view viewDidLoad")
 
         billField.becomeFirstResponder()
@@ -31,17 +35,22 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         print("ViewController view will appear")
 
-        let defaults = UserDefaults.standard
+
+//      Set Currency
+        let currencyIndex = defaults.integer(forKey: "currencyIndex")
+        self.currency = currencies[currencyIndex]
+        print("Current Currency is: ", currency)
+
+
+//      Set defualt tip percentage
         let defualtTipPercentageIndex = defaults.integer(forKey: "defaultTipPercentageIndex")
+        tipPercent.selectedSegmentIndex = defualtTipPercentageIndex
+
+
+//      Use the last bill amount if it was set less than 10 minutes ago
         let lastBillTime = defaults.integer(forKey: "lastBillTime")
         let currentTimeInMiliseconds = Int(Date().timeIntervalSince1970)
 
-        tipPercent.selectedSegmentIndex = defualtTipPercentageIndex
-
-//        Use the last bill amount if it was set less than 10 minutes ago
-        print("Last Bill Time: ", lastBillTime)
-        print("Current Time:   ", currentTimeInMiliseconds)
-        print("Differance:     ", (currentTimeInMiliseconds - lastBillTime))
         if ((lastBillTime + 600) > currentTimeInMiliseconds){
             let lastBillAmount = defaults.object(forKey: "lastBillAmount") as! String?
             billField.text = lastBillAmount
@@ -87,27 +96,37 @@ class ViewController: UIViewController {
         }
     }
 
-    @IBAction func finishEditingBillField(_ sender: Any) {
-        print("finish editing bill field")
-    }
 
     @IBAction func calculateTip(_ sender: Any) {
+//      calculate numerical amount of tip and total
         let bill = Double(billField.text!) ?? 0
         let selectedTipAmount = Double(tipAmounts[tipPercent.selectedSegmentIndex])
         let tip  = bill * selectedTipAmount
         let total = bill + tip
 
-        tipLabel.text = String(format: "$%.2f", tip)
-        totalLabel.text = String(format: "$%.2f", total)
 
-//        Save bill to UserDefaults
+//      Set currency through Local
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: self.currency)
+        formatter.numberStyle = .currency
+
+
+//      Set tip and total with current currency
+        if let formattedTipAmount = formatter.string(from: tip as NSNumber) {
+            tipLabel.text = formattedTipAmount
+        }
+
+        if let formattedTotalAmount = formatter.string(from: total as NSNumber) {
+            totalLabel.text = formattedTotalAmount
+        }
+
+
+//      Save bill to UserDefaults to be used for the next 10 min
         let currentTimeInMiliseconds = Date().timeIntervalSince1970
-        let defaults = UserDefaults.standard
 
         defaults.set(billField.text, forKey: "lastBillAmount")
         defaults.set(currentTimeInMiliseconds, forKey: "lastBillTime")
         defaults.synchronize()
-
     }
 }
 

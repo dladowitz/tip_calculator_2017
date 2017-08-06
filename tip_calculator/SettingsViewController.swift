@@ -11,15 +11,20 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     @IBOutlet weak var tipControl: UISegmentedControl!
+    @IBOutlet weak var currencyControl: UISegmentedControl!
+
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         print("triggering SettingsViewController viewDidLoad")
 
-        let defaults = UserDefaults.standard
         let defualtTipPercentageIndex = defaults.integer(forKey: "defaultTipPercentageIndex")
         tipControl.selectedSegmentIndex = defualtTipPercentageIndex
+
+        let currencyIndex = defaults.integer(forKey: "currencyIndex")
+        currencyControl.selectedSegmentIndex = currencyIndex
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,9 +35,15 @@ class SettingsViewController: UIViewController {
 
     @IBAction func changeValue(_ sender: Any) {
         let defaultTipPercentageIndex = tipControl.selectedSegmentIndex
-        let defaults = UserDefaults.standard
 
         defaults.set(defaultTipPercentageIndex, forKey: "defaultTipPercentageIndex")
+        defaults.synchronize()
+    }
+
+    @IBAction func currencyChange(_ sender: Any) {
+        let currencyIndex = currencyControl.selectedSegmentIndex
+
+        defaults.set(currencyIndex, forKey: "currencyIndex")
         defaults.synchronize()
     }
 
