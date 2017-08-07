@@ -84,11 +84,11 @@ class ViewController: UIViewController {
         // Highlight new total
         if (totalLabel.text != "$0.00"){
             UIView.animate(withDuration: 0.6, animations: {
-                self.totalViewContainer.backgroundColor = UIColor(red:0.28, green:0.57, blue:0.97, alpha:1.0)
+                self.totalViewContainer.backgroundColor = UIColor(red:201/255, green:140/255, blue:86/255, alpha:1.0)
 
             })
             UIView.animate(withDuration: 0.6, animations: {
-                self.totalViewContainer.backgroundColor = UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.0)
+                self.totalViewContainer.backgroundColor = UIColor(red:201/255, green:140/255, blue:86/255, alpha:0.0)
                 
             })
 
