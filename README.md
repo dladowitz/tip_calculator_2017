@@ -1,10 +1,10 @@
-# Pre-work - *Name of App Here*
+# Pre-work - *Tip calculator*
 
-**Name of your app** is a tip calculator application for iOS.
+**Tip Calculator** is a tip calculator application for iOS.
 
-Submitted by: **Your Name Here**
+Submitted by: **David Ladowitz**
 
-Time spent: **X** hours spent in total
+Time spent: **12** hours spent in total
 
 ## User Stories
 
@@ -28,7 +28,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/GGoDfE4.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -36,13 +36,45 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 As part of your pre-work submission, please reflect on the app and answer the following questions below:
 
-**Question 1**: "What are your reactions to the iOS app development platform so far? How would you describe outlets and actions to another developer? Bonus: any idea how they are being implemented under the hood? (It might give you some ideas if you right-click on the Storyboard and click Open As->Source Code")
+**Question 1**: 
+    "What are your reactions to the iOS app development platform so far? How would you describe outlets and actions to another developer? Bonus: any idea how they are being implemented under the hood? (It might give you some ideas if you right-click on the Storyboard and click Open As->Source Code")
 
-**Answer:** [Enter your answer here in a paragraph or two].
+**Answer:** [XCode is a great IDE, with lots of autocomplation help. 
+    Swift looks a lot more approachable than Objective-C, with less verbose syntax. It seems closer to Ruby, which is nice. 
+    Compared to CSS, iOS does a good job of making things look nice without extensive knowledge of frameworks.
+    
+ IBOutlets connect the attributes of Storyboard Objects with your code, allowing you to set things like text and color programattically. IBActions connect funtionality of Storyboard Objects with your code, allowing you to run code on interactions (like button presses).
+ 
+ They appear to be implemented as an XML style of markup in the storyboard, XML type attributes holding things like eventType and id
+    ].
 
 Question 2: "Swift uses [Automatic Reference Counting](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html#//apple_ref/doc/uid/TP40014097-CH20-ID49) (ARC), which is not a garbage collector, to manage memory. Can you explain how you can get a strong reference cycle for closures? (There's a section explaining this concept in the link, how would you summarize as simply as possible?)"
 
-**Answer:** [Enter your answer here in a paragraph or two].
+**Answer:** [n general, a strong reference is set up when a class instance is assigned to variable (or a constant or property). 
+ARC will not deallocate the instance from memory while a strong reference still exists. 
+The strong reference is broken when the variable no longer references the object, usually by setting the variable to nil. 
+
+A strong reference cycle is setup when two objects reference each other. 
+For example a Person class my have a child and parent property. 
+If two Person objects are created and reference each other a Strong Reference Cycle is setup. 
+
+Example
+Person 1
+parent: Person2
+child: nil
+
+Person 2
+parent: nil
+child: Person1
+
+A Strong Reference Cycle for Closures is setup when a class instance has property which is a Closure and that closure references a property within the class.
+For example a Person class my have a ‘employer’ property that is a Closure and also references the person’s name. 
+In this case the closure acts like it’s own class instance (maybe it is one) and references the Person instance
+
+Example
+Person Class
+name: ‘David’
+employer:  () -> String = { “\(self.name) works at Facebook” }].
 
 
 ## License
