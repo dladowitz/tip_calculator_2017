@@ -16,10 +16,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var totalViewContainer: UIView!
     @IBOutlet var mainViewContainer: UIView!
 
-    var tipAmounts:Array<Double> = [0.18, 0.20, 0.25]
-    var currencies:Array<String> = ["en_US", "en_GB", "es_ES", "ja_JP"]
+    let tipAmounts:Array<Double> = [0.18, 0.20, 0.25]
+    let currencies:Array<String> = ["en_US", "en_GB", "es_ES", "ja_JP"]
+    let currencieSymbols:Array<String> = ["$", "£", "€", "¥"]
+
 
     var currency = ""
+    var currencySymbol = ""
+    var textBillWithoutCommasLastLength = 0
+
+    var tip = 0.0
+    var total = 0.0
 
     let defaults = UserDefaults.standard
 
@@ -39,6 +46,7 @@ class ViewController: UIViewController {
 //      Set Currency
         let currencyIndex = defaults.integer(forKey: "currencyIndex")
         self.currency = currencies[currencyIndex]
+        self.currencySymbol = currencieSymbols[currencyIndex]
         print("Current Currency is: ", currency)
 
 
@@ -56,27 +64,14 @@ class ViewController: UIViewController {
             billField.text = lastBillAmount
         }
 
+
+//      Format UITextField
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+
         calculateTip(Any.self)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print("ViewController view did appear")
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        print("ViewController view will disappear")
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        print(" ViewControllerview did disappear")
-    }
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
     @IBAction func changeTip(_ sender: Any) {
         print("changed tip amount")
@@ -97,12 +92,24 @@ class ViewController: UIViewController {
     }
 
 
+
+//  Should break this up into a bunch of small methods with more time
     @IBAction func calculateTip(_ sender: Any) {
-//      calculate numerical amount of tip and total
-        let bill = Double(billField.text!) ?? 0
-        let selectedTipAmount = Double(tipAmounts[tipPercent.selectedSegmentIndex])
-        let tip  = bill * selectedTipAmount
-        let total = bill + tip
+        let textBill = billField.text
+
+//      Drop the cents here to effectively multiply by 100
+        var textBillWithoutCommas = textBill?.replacingOccurrences(of: ",|£|¥|€|\\$|\\.|\\s", with: "", options: .regularExpression, range: nil)
+
+
+//      Can't delete because currency symbol is blocking
+        if (currencySymbol == "€") && (self.textBillWithoutCommasLastLength == (textBillWithoutCommas?.characters.count)!) {
+//          Something funny happens with 2 and 3 characters
+            textBillWithoutCommas = textBillWithoutCommas?.substring(to: (textBillWithoutCommas?.index(before: (textBillWithoutCommas?.endIndex)!))!)
+        }
+        self.textBillWithoutCommasLastLength = (textBillWithoutCommas?.characters.count)!
+
+
+        let doubleBillInCents = Double(textBillWithoutCommas!) ?? 0
 
 
 //      Set currency through Local
@@ -110,16 +117,37 @@ class ViewController: UIViewController {
         formatter.locale = Locale(identifier: self.currency)
         formatter.numberStyle = .currency
 
+//      calculate numerical amount of tip and total
+        let selectedTipAmount = Double(tipAmounts[tipPercent.selectedSegmentIndex])
 
-//      Set tip and total with current currency
+
+//      Yen don't have cents
+        if currencySymbol == "¥" {
+            tip  = (doubleBillInCents * selectedTipAmount)
+            total = doubleBillInCents + tip
+
+            if let formattedBillAmount = formatter.string(from: doubleBillInCents as NSNumber) {
+                billField.text = formattedBillAmount
+            }
+        } else {
+            tip  = (doubleBillInCents * selectedTipAmount) / 100
+            total = doubleBillInCents/100 + tip
+
+            if let formattedBillAmount = formatter.string(from: doubleBillInCents/100 as NSNumber) {
+                billField.text = formattedBillAmount
+            }
+        }
+
+
+//      Write to text input field
         if let formattedTipAmount = formatter.string(from: tip as NSNumber) {
             tipLabel.text = formattedTipAmount
         }
 
+//      Set tip and total with current currency
         if let formattedTotalAmount = formatter.string(from: total as NSNumber) {
             totalLabel.text = formattedTotalAmount
         }
-
 
 //      Save bill to UserDefaults to be used for the next 10 min
         let currentTimeInMiliseconds = Date().timeIntervalSince1970
