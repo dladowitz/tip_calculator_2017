@@ -15,8 +15,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var tipPercent: UISegmentedControl!
     @IBOutlet weak var totalViewContainer: UIView!
     @IBOutlet var mainViewContainer: UIView!
+    @IBOutlet weak var splitAmountLabel: UILabel!
+    @IBOutlet weak var splitCountLabel: UITextField!
 
-    let tipAmounts:Array<Double> = [0.18, 0.20, 0.25]
+    let tipAmounts:Array<Double> = [0.10, 0.16, 0.18, 0.20, 0.25]
     let currencies:Array<String> = ["en_US", "en_GB", "es_ES", "ja_JP"]
     let currencieSymbols:Array<String> = ["$", "£", "€", "¥"]
 
@@ -155,6 +157,30 @@ class ViewController: UIViewController {
         defaults.set(billField.text, forKey: "lastBillAmount")
         defaults.set(currentTimeInMiliseconds, forKey: "lastBillTime")
         defaults.synchronize()
+
+        calculateSplit(Any.self)
     }
+
+    @IBAction func calculateSplit(_ sender: Any) {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: self.currency)
+        formatter.numberStyle = .currency
+
+        var totalWithoutCommas = ""
+        if (currencySymbol == "€") {
+            totalWithoutCommas = (totalLabel.text?.replacingOccurrences(of: "€|\\s|\\.", with: "", options: .regularExpression, range: nil))!
+            totalWithoutCommas = (totalWithoutCommas.replacingOccurrences(of: ",", with: ".", options: .regularExpression, range: nil))
+        } else {
+            totalWithoutCommas = (totalLabel.text?.replacingOccurrences(of: ",|£|¥|€|\\$|\\s", with: "", options: .regularExpression, range: nil))!
+        }
+
+
+        let splitAmount = Double(totalWithoutCommas)! / (Double(splitCountLabel.text!) ?? 1)
+        if let formattedSplitAmount = formatter.string(from: splitAmount as NSNumber) {
+            splitAmountLabel.text = formattedSplitAmount
+        }
+
+    }
+
 }
 
