@@ -50,33 +50,44 @@ XCode is a great IDE, with lots of autocomplation help.
 
 Question 2: "Swift uses [Automatic Reference Counting](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html#//apple_ref/doc/uid/TP40014097-CH20-ID49) (ARC), which is not a garbage collector, to manage memory. Can you explain how you can get a strong reference cycle for closures? (There's a section explaining this concept in the link, how would you summarize as simply as possible?)"
 
-**Answer:** In general, a strong reference is set up when a class instance is assigned to variable (or a constant or property). 
+**Answer:** 
+In general, a **Strong Reference** is set up when a class instance is assigned to variable (or a constant or property). 
 ARC will not deallocate the instance from memory while a strong reference still exists. 
 The strong reference is broken when the variable no longer references the object, usually by setting the variable to nil. 
 
-A strong reference cycle is setup when two objects reference each other. 
+A **Strong Reference Cycle** is setup when two objects reference each other. 
 For example a Person class my have a child and parent property. 
 If two Person objects are created and reference each other a Strong Reference Cycle is setup. 
 
-Example
-Person 1
 
+__Example__
+<br>
+*Person1*
+<br>
 parent: Person2
-
+<br>
 child: nil
 
-Person 2
+*Person2*
+<br>
 parent: nil
+<br>
 child: Person1
 
-A Strong Reference Cycle for Closures is setup when a class instance has property which is a Closure and that closure references a property within the class.
-For example a Person class my have a ‘employer’ property that is a Closure and also references the person’s name. 
-In this case the closure acts like it’s own class instance (maybe it is one) and references the Person instance
+In this case the **Strong References** are not removed even if the referenes beween Person1 and the class instance are removed. This can cause memory leaks where instances that are no longer needed live in memory indefinitely. 
 
-Example
-Person Class
+
+A **Strong Reference Cycle for Closures** is setup when a class instance has a property which is a Closure and that Closure references a property within the class.
+
+For example, a Person class my have a ‘employer’ property that is a Closure and also references the person’s name. 
+In this case the closure acts like it’s own class instance (maybe it is one) and setsup a **Strong References** the Person instance
+
+__Example__
+<br>
+*Person*
 name: ‘David’
-employer:  () -> String = { “\(self.name) works at Facebook” }].
+<br>
+employer:  () -> String = { “\\(self.name) works at Facebook” }.
 
 
 ## License
