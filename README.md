@@ -80,13 +80,13 @@ In this case the **Strong References** are not removed even if the referenes bew
 
 A **Strong Reference Cycle for Closures** is setup when a class instance has a property which is a Closure and that Closure references a property within the class.
 
-For example, a Person class my have a ‘employer’ property that is a Closure and also references the person’s name. 
-In this case the closure acts like it’s own class instance (maybe it is one) and setsup a **Strong References** the Person instance
+For example, a Person class my have an ‘employer’ property that is a Closure and also references the person’s name. 
+In this case the closure acts like it’s own class instance (maybe it is one) and sets up a **Strong Reference** to the Person instance.
 
 __Example__
 <br>
 *Person*
-name: ‘David’
+name: String
 <br>
 employer:  () -> String = { “\\(self.name) works at Facebook” }.
 
