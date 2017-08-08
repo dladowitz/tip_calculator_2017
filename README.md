@@ -39,18 +39,18 @@ As part of your pre-work submission, please reflect on the app and answer the fo
 **Question 1**: 
     "What are your reactions to the iOS app development platform so far? How would you describe outlets and actions to another developer? Bonus: any idea how they are being implemented under the hood? (It might give you some ideas if you right-click on the Storyboard and click Open As->Source Code")
 
-**Answer:** [XCode is a great IDE, with lots of autocomplation help. 
+**Answer:** 
+XCode is a great IDE, with lots of autocomplation help. 
     Swift looks a lot more approachable than Objective-C, with less verbose syntax. It seems closer to Ruby, which is nice. 
     Compared to CSS, iOS does a good job of making things look nice without extensive knowledge of frameworks.
     
  IBOutlets connect the attributes of Storyboard Objects with your code, allowing you to set things like text and color programattically. IBActions connect funtionality of Storyboard Objects with your code, allowing you to run code on interactions (like button presses).
  
- They appear to be implemented as an XML style of markup in the storyboard, XML type attributes holding things like eventType and id
-    ].
+ They appear to be implemented as an XML style of markup in the storyboard, XML type attributes holding things like eventType and id.
 
 Question 2: "Swift uses [Automatic Reference Counting](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html#//apple_ref/doc/uid/TP40014097-CH20-ID49) (ARC), which is not a garbage collector, to manage memory. Can you explain how you can get a strong reference cycle for closures? (There's a section explaining this concept in the link, how would you summarize as simply as possible?)"
 
-**Answer:** [n general, a strong reference is set up when a class instance is assigned to variable (or a constant or property). 
+**Answer:** In general, a strong reference is set up when a class instance is assigned to variable (or a constant or property). 
 ARC will not deallocate the instance from memory while a strong reference still exists. 
 The strong reference is broken when the variable no longer references the object, usually by setting the variable to nil. 
 
@@ -60,7 +60,9 @@ If two Person objects are created and reference each other a Strong Reference Cy
 
 Example
 Person 1
+
 parent: Person2
+
 child: nil
 
 Person 2
